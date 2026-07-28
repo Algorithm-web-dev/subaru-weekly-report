@@ -27,6 +27,7 @@
     min-height:100vh;
   }
 
+  /* Sidebar */
   .sidebar{
     width:260px;
     flex-shrink:0;
@@ -77,6 +78,7 @@
   .sidebar-footer .label{ color:#565c6b; font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;}
   .sidebar-footer .value{ color:#e2e4ea; font-weight:600; }
 
+  /* Main content */
   .main{ flex:1; margin-left:260px; padding:56px 64px; max-width:1100px; }
   .section{ display:block; scroll-margin-top:40px; padding-bottom:60px; }
   .section + .section{ border-top:1px solid var(--card-border); padding-top:56px; }
@@ -143,6 +145,7 @@
   .chip.chip-done{ border-left-color:#16a34a; }
   .chip.chip-scheduled{ border-left-color:#e2a300; }
 
+  /* Task detail section */
   .task{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
   .task-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
   .task-num{ width:26px; height:26px; border-radius:7px; background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
@@ -150,6 +153,7 @@
   .status-pill{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; }
   .status-done{ background:#e7f7ec; color:#16a34a; }
   .status-progress{ background:#fff4e0; color:#b06b00; }
+  .status-scheduled{ background:#e8edfc; color:#3b63f0; }
   .task-body{ font-size:13.5px; color:var(--text-muted); line-height:1.6; margin-top:10px; padding-left:38px; }
 
   table{ width:100%; border-collapse:collapse; margin-top:12px; font-size:13px; }
@@ -200,22 +204,6 @@
   .plugin-dropdown table{ width:100%; margin-top:10px; background:#f6f7fb; border-radius:10px; padding:4px 6px; }
   .plugin-dropdown th, .plugin-dropdown td{ padding:8px 14px; }
 
-  .empty-state{
-    background:var(--card-bg); border:1px dashed var(--card-border); border-radius:14px;
-    padding:36px 28px; text-align:center; color:var(--text-faint); font-size:13.5px;
-  }
-
-  .archive-list{ display:flex; flex-direction:column; gap:12px; }
-  .archive-item{
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
-    background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px;
-    padding:16px 20px; text-decoration:none; color:var(--text-dark); transition: border-color .15s ease;
-  }
-  .archive-item:hover{ border-color: var(--accent); }
-  .archive-item .a-title{ font-size:14px; font-weight:700; margin-bottom:3px; }
-  .archive-item .a-meta{ font-size:12px; color:var(--text-faint); }
-  .archive-item .a-arrow{ font-size:14px; color:var(--accent); font-weight:700; flex-shrink:0; }
-
   @media(max-width:900px){
     body{flex-direction:column;}
     .sidebar{position:relative; width:100%; height:auto;}
@@ -260,8 +248,6 @@
 
     table{font-size:12px;}
     th, td{padding:7px 8px;}
-
-    .archive-item{flex-direction:column; align-items:flex-start; gap:6px;}
   }
 </style>
 </head>
@@ -286,13 +272,12 @@
       <a class="nav-item" href="#breakdown" data-section="breakdown"><span class="nav-num">02</span> Weekly breakdown</a>
       <a class="nav-item" href="#details" data-section="details"><span class="nav-num">03</span> Task details</a>
       <a class="nav-item" href="#issues" data-section="issues"><span class="nav-num">04</span> Issues & fixes</a>
-      <a class="nav-item" href="#previous" data-section="previous"><span class="nav-num">05</span> Previous audits</a>
     </div>
 
     <div class="sidebar-footer">
       <div class="row"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
-      <div class="row"><div class="label">Report date</div><div class="value">06 July 2026 – 10 July 2026</div></div>
-      <div class="row"><div class="label">Reference</div><div class="value">SUBARUSA2</div></div>
+      <div class="row"><div class="label">Report date</div><div class="value">29 June 2026 – 03 July 2026</div></div>
+      <div class="row"><div class="label">Reference</div><div class="value">SUBARUSA1</div></div>
     </div>
   </div>
 
@@ -303,19 +288,22 @@
       <div class="badge"><span class="badge-dot"></span>Weekly Task Report · Subaru</div>
       <h1>SubaruSA — Dev</h1>
       <p class="lede">
-        Good progress this period — form mapping was confirmed up to date against the CMS, the Sandton location pin was
-        fixed, article images across all flagged blogs are now displaying correctly, and a QC pass on Locate a Dealer
-        turned up and corrected 8 address issues. CFAO issues on Subaru remain in progress, along with two items carried
-        over from last period: the Book a Test Drive embed is still in QC pending go-live confirmation, and the 5x event
-        pages are still awaiting client-approved copy. Looking ahead, a Form Submissions Receipt Investigation is
-        scheduled for 13 July, Subaru Maintenance Web Dev 2/2 for 27 July, and the campaign removal for 31 July 2026. A
-        broader website refresh is also planned for January 2027.
+        The development team closed out the week with the "We Buy Back Subaru" staging page live and a full round of web
+        maintenance completed across security, backups, server performance, plugin updates, form testing and API integrity.
+        The Book a Test Drive inline forms and CTA buttons have been implemented across 400+ links as part of our SEO
+        recommendations and are currently in QC review, with go-live expected on the next update. Five event pages are built
+        and ready, pending client-approved copy, alongside a Sandton location pin fix and a full form mapping review this week. A
+        campaign removal is scheduled for 31 July 2026. An outdated accessories article was also removed from the site this
+        week, and the campaign end date has been updated/extended to 31 July 2026 across the site. A dealer/province field
+        swap was fixed on the Maintenance Campaign form, international number support was enabled on that same form, and
+        the Subaru Lead Monitor — a custom automation tool for tracking form and CRM webhook health — has been deployed
+        and is now live across all 13 dealerships.
       </p>
 
       <div class="meta-row">
         <div class="meta-item"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
-        <div class="meta-item"><div class="label">Report date</div><div class="value">06 July 2026 – 10 July 2026</div></div>
-        <div class="meta-item"><div class="label">Reference</div><div class="value">SUBARUSA2</div></div>
+        <div class="meta-item"><div class="label">Report date</div><div class="value">29 June 2026 – 03 July 2026</div></div>
+        <div class="meta-item"><div class="label">Reference</div><div class="value">SUBARUSA1</div></div>
         <div class="meta-item"><div class="label">Department</div><div class="value link">Dev</div></div>
       </div>
 
@@ -324,18 +312,18 @@
       <div class="stat-cards">
         <div class="stat-card">
           <div class="stat-label">Tasks completed</div>
-          <div class="stat-num blue">4</div>
-          <div class="stat-sub">Form mapping, location pin, article images, dealer QC</div>
+          <div class="stat-num blue">7</div>
+          <div class="stat-sub">Staging page, web maintenance, article removal, campaign extension, form fix, Lead Monitor tool, intl. numbers</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Tasks still working on</div>
-          <div class="stat-num green">3</div>
-          <div class="stat-sub">CFAO issues, test drive QC, event copy approval</div>
+          <div class="stat-num green">4</div>
+          <div class="stat-sub">Copy approval, pin fix, form mapping check, test drive QC</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Scheduled ahead</div>
-          <div class="stat-num blue">4</div>
-          <div class="stat-sub">Form submissions review, Web Dev 2/2, campaign removal, site refresh</div>
+          <div class="stat-num blue">1</div>
+          <div class="stat-sub">Campaign removal — 31 July 2026 · <a href="https://www.subaru.co.za/maintenance-campaign/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
         </div>
       </div>
     </div>
@@ -351,10 +339,13 @@
           <div class="t-card">
             <div class="t-card-head"><h3>Completed This Week</h3><span class="t-week-tag tag-done">Done</span></div>
             <div class="chips">
-              <div class="chip chip-done">Form mapping confirmed up to date — API/CMS integration checked with Tinus, <a href="https://subaru-cms-playbook.vercel.app/" target="_blank" style="color:var(--accent); font-weight:600;">view playbook</a></div>
-              <div class="chip chip-done">Sandton location pin fixed</div>
-              <div class="chip chip-done">Article images fixed across all flagged blogs, full site image check completed</div>
-              <div class="chip chip-done">Locate a Dealer QC — 8 address errors found and corrected</div>
+              <div class="chip chip-done">Live staging build for "We Buy Back Subaru" campaign — <a href="https://www.staging.subaru.co.za/we-buy-back/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+              <div class="chip chip-done">Web maintenance — full platform health check covering security, backups, server performance, plugin updates, form testing, and API integrity across CRM, AutoTrader and Everlytics</div>
+              <div class="chip chip-done">Article removed from website: <a href="https://www.subaru.co.za/tech/eight-cool-accessories-you-can-fit-to-your-dirt-loving-subaru/" target="_blank" style="color:var(--accent); font-weight:600;">Eight Cool Accessories You Can Fit To Your Dirt-Loving Subaru</a></div>
+              <div class="chip chip-done">Campaign end date updated/extended to 31 July 2026 across the site — <a href="https://www.subaru.co.za/maintenance-campaign/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+              <div class="chip chip-done">Fixed dealer / province field swap on the Maintenance Campaign form</div>
+              <div class="chip chip-done">Deployed the Subaru Lead Monitor — custom automation tool for form + CRM webhook monitoring</div>
+              <div class="chip chip-done">Enabled international number support on the Maintenance Campaign form</div>
             </div>
           </div>
         </div>
@@ -364,9 +355,10 @@
           <div class="t-card">
             <div class="t-card-head"><h3>In Progress</h3><span class="t-week-tag tag-scheduled">Scheduled</span></div>
             <div class="chips">
-              <div class="chip chip-scheduled">Subaru :: CFAO issues — due 10 July</div>
-              <div class="chip chip-scheduled">Book a Test Drive inline forms + CTA buttons across 400+ links — still in QC, carried over from last period, go-live pending confirmation</div>
-              <div class="chip chip-scheduled">5x Event pages built, still awaiting client-approved copy — staging: <a href="https://www.subaru.co.za/staging-subaru-events-23h4f3hjfh3fhfh3f/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+              <div class="chip chip-scheduled">Book a Test Drive inline forms + CTA buttons implemented across 400+ links (SEO recommendation) — in QC, going live next update</div>
+              <div class="chip chip-scheduled">5x Event pages built, awaiting client-approved copy — staging: <a href="https://www.subaru.co.za/staging-subaru-events-23h4f3hjfh3fhfh3f/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+              <div class="chip chip-scheduled">Location pin to be fixed — Subaru Sandton</div>
+              <div class="chip chip-scheduled">Full form mapping check — in progress this week, next update 10 July</div>
             </div>
           </div>
         </div>
@@ -376,10 +368,7 @@
           <div class="t-card">
             <div class="t-card-head"><h3>Tasks Still to Come</h3><span class="t-week-tag tag-scheduled">Scheduled</span></div>
             <div class="chips">
-              <div class="chip chip-scheduled">Form Submissions Receipt Investigation — 13 July</div>
-              <div class="chip chip-scheduled">Subaru Maintenance :: Web Dev 2/2 — 27 July</div>
-              <div class="chip chip-scheduled">Campaign removal — 31 July 2026</div>
-              <div class="chip chip-scheduled">Website refresh — planned for January 2027</div>
+              <div class="chip chip-scheduled">Campaign removal — scheduled for 31 July 2026 — <a href="https://www.subaru.co.za/maintenance-campaign/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
             </div>
           </div>
         </div>
@@ -395,126 +384,206 @@
       <div class="task">
         <div class="task-head">
           <div class="task-num">1</div>
-          <h3>Subaru :: CFAO issues</h3>
-          <span class="status-pill status-progress">In progress</span>
+          <h3>Build page with staging link — We Buy Back Subaru</h3>
+          <span class="status-pill status-done">Done</span>
         </div>
-        <div class="task-body">Investigating reported CFAO issues. Due 10 July.</div>
+        <div class="task-body">Page built out and live on staging, ready for review. Staging: <a href="https://www.staging.subaru.co.za/we-buy-back/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
       </div>
 
       <!-- TASK 2 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">2</div>
-          <h3>Fix images on articles</h3>
+          <h3>Web maintenance</h3>
           <span class="status-pill status-done">Done</span>
         </div>
-        <div class="task-body">All blogs flagged in the shared document have been fixed and images are displaying correctly. Also did a full pass across the rest of the site to check for any other broken images — everything is displaying correctly.</div>
+
+        <div class="subhead">Form testing — Gravity Forms (all confirmed working)</div>
+        <div class="form-grid">
+          <div class="form-row"><span class="n">Fall in Love with Peace of Mind</span><span class="v">12 entries</span></div>
+          <div class="form-row"><span class="n">Book a Test Drive — Forester</span><span class="v">10 entries</span></div>
+          <div class="form-row"><span class="n">Book a Test Drive — Crosstrek</span><span class="v">9 entries</span></div>
+          <div class="form-row"><span class="n">Book a Test Drive — WRX</span><span class="v">9 entries</span></div>
+          <div class="form-row"><span class="n">Book a Test Drive — Outback</span><span class="v">10 entries</span></div>
+          <div class="form-row"><span class="n">Parts Enquiry</span><span class="v">1 entry</span></div>
+          <div class="form-row"><span class="n">Recalls</span><span class="v">1 entry</span></div>
+          <div class="form-row"><span class="n">Service Booking</span><span class="v">1 entry</span></div>
+          <div class="form-row"><span class="n">Referral Program Form</span><span class="v">1 entry</span></div>
+          <div class="form-row"><span class="n">Stay Connected Form</span><span class="v">1 entry — successful</span></div>
+          <div class="form-row"><span class="n">Change of Ownership Form</span><span class="v">1 entry</span></div>
+        </div>
+        <div class="flag">⚠ WRX notification routing error found (invalid TO address, isolated to Bellville branch) — resolved.</div>
+
+        <div class="subhead">Plugin audit</div>
+        <table style="margin-left:38px; width:calc(100% - 38px);">
+          <tr><th>Plugin</th><th>Before</th><th>After</th></tr>
+          <tr><td>Dynamics 365 Integration</td><td class="mono">1.4</td><td class="mono">1.4.1</td></tr>
+          <tr><td>Elementor</td><td class="mono">4.1.3</td><td class="mono">4.1.4</td></tr>
+          <tr><td>SiteSEO — SEO Simplified</td><td class="mono">1.2.5</td><td class="mono">1.3.9</td></tr>
+          <tr><td>WP Mail SMTP</td><td class="mono">4.8.0</td><td class="mono">4.9.0</td></tr>
+          <tr><td>Yoast SEO</td><td class="mono">27.8</td><td class="mono">27.9</td></tr>
+        </table>
+        <div class="flag" style="color:var(--text-muted); font-weight:400;">26 additional plugins checked and confirmed already on latest version (ACF PRO, Wordfence, LiteSpeed Cache, Gravity Forms core + add-ons, WP All Import/Export, and others).</div>
+
+        <details class="plugin-dropdown">
+          <summary>View all 26 plugins &amp; current versions</summary>
+          <table>
+            <tr><th>Plugin</th><th>Version</th></tr>
+            <tr><td>Advanced Custom Fields PRO</td><td class="mono">6.3.12</td></tr>
+            <tr><td>Advanced Google reCAPTCHA</td><td class="mono">5.39</td></tr>
+            <tr><td>Algorithm Maintenance Suite</td><td class="mono">0.6.2</td></tr>
+            <tr><td>All-in-One WP Migration (Unlimited)</td><td class="mono">6.77.1</td></tr>
+            <tr><td>Classic Editor</td><td class="mono">1.7.0</td></tr>
+            <tr><td>Code Snippets</td><td class="mono">3.9.6</td></tr>
+            <tr><td>Duplicate Page</td><td class="mono">4.5.9</td></tr>
+            <tr><td>Elementor Pro</td><td class="mono">3.35.0</td></tr>
+            <tr><td>Gravity Forms</td><td class="mono">2.10.5</td></tr>
+            <tr><td>Gravity Forms Address Autocomplete</td><td class="mono">4.0</td></tr>
+            <tr><td>Gravity Forms Chained Selects Add-On</td><td class="mono">1.8.1</td></tr>
+            <tr><td>Gravity Forms SendGrid Add-On</td><td class="mono">1.6.0</td></tr>
+            <tr><td>Gravity Forms Webhooks Add-On</td><td class="mono">1.7.0</td></tr>
+            <tr><td>GravityExport Lite</td><td class="mono">2.6.0</td></tr>
+            <tr><td>GTM4WP</td><td class="mono">1.22.3</td></tr>
+            <tr><td>Image Optimizer</td><td class="mono">1.7.5</td></tr>
+            <tr><td>LiteSpeed Cache</td><td class="mono">7.8.1</td></tr>
+            <tr><td>Schema &amp; Structured Data for WP &amp; AMP</td><td class="mono">1.61</td></tr>
+            <tr><td>Simple 301 Redirects</td><td class="mono">2.1.0</td></tr>
+            <tr><td>VWO (Wingify)</td><td class="mono">4.14</td></tr>
+            <tr><td>Wordfence Security</td><td class="mono">8.2.2</td></tr>
+            <tr><td>WP All Export Pro</td><td class="mono">1.8.4</td></tr>
+            <tr><td>WP All Import — Yoast WordPress SEO Add-On</td><td class="mono">1.1.8</td></tr>
+            <tr><td>WP All Import Pro</td><td class="mono">4.8.1</td></tr>
+            <tr><td>WP File Manager</td><td class="mono">8.0.4</td></tr>
+            <tr><td>WP Store Locator</td><td class="mono">2.3.2</td></tr>
+          </table>
+        </details>
+
+        <div class="subhead">AutoTrader API check</div>
+        <div class="api-grid">
+          <div class="api-box"><div class="k">Imported</div><div class="v">2</div></div>
+          <div class="api-box"><div class="k">Updated</div><div class="v">98</div></div>
+          <div class="api-box"><div class="k">Merged duplicates</div><div class="v">13</div></div>
+          <div class="api-box"><div class="k">Deleted</div><div class="v">4</div></div>
+        </div>
+        <div class="form-grid" style="margin-top:4px;">
+          <div class="form-row"><span class="n">Total active vehicles</span><span class="v">87</span></div>
+          <div class="form-row"><span class="n">Forester</span><span class="v">52</span></div>
+          <div class="form-row"><span class="n">Crosstrek</span><span class="v">11</span></div>
+          <div class="form-row"><span class="n">Outback</span><span class="v">11</span></div>
+          <div class="form-row"><span class="n">XV</span><span class="v">7</span></div>
+          <div class="form-row"><span class="n">WRX</span><span class="v">5</span></div>
+          <div class="form-row"><span class="n">WRX-STI</span><span class="v">1</span></div>
+          <div class="form-row"><span class="n">Duration</span><span class="v">3.56s</span></div>
+        </div>
+        <div class="flag" style="color:var(--text-muted); font-weight:400;">Deleted: XV 2018 (Nelspruit), XV 2023 (Nelspruit), WRX 2024 (Edenvale), Forester 2023 (Edenvale).</div>
       </div>
 
       <!-- TASK 3 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">3</div>
-          <h3>Form Submissions Receipt Investigation</h3>
-          <span class="status-pill status-progress">Scheduled</span>
+          <h3>Article removal</h3>
+          <span class="status-pill status-done">Done</span>
         </div>
-        <div class="task-body">Scheduled for 13 July.</div>
+        <div class="task-body">Removed outdated accessories article from the site: <a href="https://www.subaru.co.za/tech/eight-cool-accessories-you-can-fit-to-your-dirt-loving-subaru/" target="_blank" style="color:var(--accent); font-weight:600;">Eight Cool Accessories You Can Fit To Your Dirt-Loving Subaru</a></div>
       </div>
 
       <!-- TASK 4 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">4</div>
-          <h3>Campaign date change &amp; removal</h3>
-          <span class="status-pill status-progress">Scheduled</span>
+          <h3>Campaign date extension</h3>
+          <span class="status-pill status-done">Done</span>
         </div>
-        <div class="task-body">Campaign end date changed to 31 July (completed previous period). Full campaign removal scheduled for 31 July 2026.</div>
+        <div class="task-body">Campaign end date updated/extended to 31 July 2026 across the site. <a href="https://www.subaru.co.za/maintenance-campaign/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
       </div>
 
       <!-- TASK 5 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">5</div>
-          <h3>Subaru Maintenance :: Web Dev 2/2</h3>
-          <span class="status-pill status-progress">Scheduled</span>
+          <h3>Dealer / province field fix — Maintenance Campaign form</h3>
+          <span class="status-pill status-done">Done</span>
         </div>
-        <div class="task-body">Scheduled for 27 July.</div>
+        <div class="task-body">Fixed an issue on the Maintenance Campaign form where the Dealer and Province fields had been switched around.</div>
       </div>
 
       <!-- TASK 6 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">6</div>
-          <h3>Website refresh</h3>
-          <span class="status-pill status-progress">Planned</span>
+          <h3>Subaru Lead Monitor — custom automation tool</h3>
+          <span class="status-pill status-done">Done</span>
         </div>
-        <div class="task-body">Long-term project planned for January 2027.</div>
+        <div class="task-body">
+          Deployed the Subaru Lead Monitor, a custom WordPress plugin built to close the "blind spot" of silent lead
+          routing and CRM webhook failures. It combines an automated test suite that safely simulates tagged test leads
+          with a 24/7 live monitoring layer tracking real customer submissions in real time.<br><br>
+          Email notification routing is now actively monitored across all 13 dealerships. Full end-to-end CRM tracking
+          is already live for 3 initial dealers, with the remaining dealer reference codes currently being sourced to
+          extend coverage to the rest.
+        </div>
       </div>
 
       <!-- TASK 7 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">7</div>
-          <h3>Form mapping check</h3>
+          <h3>International number support — Maintenance Campaign form</h3>
           <span class="status-pill status-done">Done</span>
         </div>
-        <div class="task-body">API integration checked against the CMS system and confirmed up to date — verified directly with Tinus, mapping all looks correct. If any forms show models not populating on the front end, flag it and we'll investigate. Also completed the requested playbook covering the API integration: <a href="https://subaru-cms-playbook.vercel.app/" target="_blank" style="color:var(--accent); font-weight:600;">view playbook</a></div>
+        <div class="task-body">Enabled support for international phone numbers on the Maintenance Campaign form.</div>
+        <div class="flag" style="margin-top:12px;">Note: let us know if this should be rolled out across all forms site-wide — we'll brief it into dev so it's applied consistently.</div>
       </div>
 
       <!-- TASK 8 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">8</div>
-          <h3>Location pin fix — Subaru Sandton</h3>
-          <span class="status-pill status-done">Done</span>
+          <h3>Embed "Book a Test Drive" buttons + inline forms</h3>
+          <span class="status-pill status-progress">QC in progress</span>
         </div>
-        <div class="task-body">Sandton location pin corrected. Proof of fix below.</div>
-        <div style="margin-left:38px; margin-top:14px;">
-          <p style="font-size:12px; color:var(--text-faint); font-style:italic;">[Proof-of-fix screenshot retained from original report]</p>
-        </div>
+        <div class="task-body">Implemented across 400+ links as part of our SEO recommendations. Currently in QC review before publishing live — expected live on the next update.</div>
       </div>
 
       <!-- TASK 9 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">9</div>
-          <h3>Locate a Dealer — QC fixes</h3>
-          <span class="status-pill status-done">Done</span>
+          <h3>Events pages</h3>
+          <span class="status-pill status-progress">In progress</span>
         </div>
-        <div class="task-body">QC pass across the Locate a Dealer listings found and corrected 8 address issues:</div>
-        <div style="margin-left:38px; margin-top:10px;">
-          <table>
-            <tr><th>Dealer</th><th>Fix</th></tr>
-            <tr><td>Dave's Panel Beaters cc</td><td>Fixed spacing: "6 - 8 Ries Street" → "6-8 Ries Street"</td></tr>
-            <tr><td>Renew-it Umhlanga</td><td>Fixed spacing: "1 - 3 Zenith Drive" → "1-3 Zenith Drive"</td></tr>
-            <tr><td>Panel Lab</td><td>Fixed incomplete address (trailing comma, missing suburb/city)</td></tr>
-            <tr><td>Rolling Wheels</td><td>Corrected city spelling: "Gabarone" → "Gaborone"</td></tr>
-            <tr><td>BB Motors Approved Repair Centre</td><td>Corrected city spelling: "Gabarone" → "Gaborone"</td></tr>
-            <tr><td>Ross Champion Durban</td><td>Corrected road name, removed duplication: "335 Mahatma Ghandi, Durban Durban KZN" → "335 Mahatma Gandhi Road, Durban, KZN"</td></tr>
-            <tr><td>Subaru Somerset West</td><td>Corrected city spelling: "Capetown" → "Cape Town"</td></tr>
-            <tr><td>De Jongh's Panelbeating Centre</td><td>Removed duplicated word: "Strand Strand Western Cape" → "Strand, Western Cape"</td></tr>
-          </table>
-        </div>
+        <div class="task-body">5x events built out. Waiting on client-approved copy before these go live. Staging: <a href="https://www.subaru.co.za/staging-subaru-events-23h4f3hjfh3fhfh3f/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
       </div>
 
       <!-- TASK 10 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">10</div>
-          <h3>Book a Test Drive embed — QC (carried over)</h3>
-          <span class="status-pill status-progress">In QC</span>
+          <h3>Location pin fix — Subaru Sandton</h3>
+          <span class="status-pill status-progress">In progress</span>
         </div>
-        <div class="task-body">Carried over from last period. Inline forms and CTA buttons implemented across 400+ links as part of our SEO recommendations — still in QC review, go-live pending confirmation.</div>
+        <div class="task-body">Map pin for the Subaru Sandton dealership is showing an incorrect location on the site's dealer locator. Fix is in progress this week.</div>
       </div>
 
       <!-- TASK 11 -->
       <div class="task">
         <div class="task-head">
           <div class="task-num">11</div>
-          <h3>Events pages — copy approval (carried over)</h3>
-          <span class="status-pill status-progress">Awaiting approval</span>
+          <h3>Full form mapping check</h3>
+          <span class="status-pill status-progress">In progress</span>
         </div>
-        <div class="task-body">Carried over from last period. 5x event pages built and ready — still awaiting client-approved copy before going live. Staging: <a href="https://www.subaru.co.za/staging-subaru-events-23h4f3hjfh3fhfh3f/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+        <div class="task-body">Reviewing all forms across the site to confirm field mapping (dealer, province, vehicle model, notification routing) is correctly configured end-to-end, following the dealer/province and WRX routing issues found this week. Next update expected 10 July 2026.</div>
+      </div>
+
+      <!-- TASK 12 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">12</div>
+          <h3>Campaign removal — Maintenance Campaign</h3>
+          <span class="status-pill status-scheduled">Scheduled</span>
+        </div>
+        <div class="task-body">Maintenance Campaign to be removed from the site once it concludes. Scheduled for 31 July 2026. <a href="https://www.subaru.co.za/maintenance-campaign/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
       </div>
 
     </div>
@@ -527,61 +596,40 @@
       <div class="issue">
         <div class="issue-head">
           <div class="issue-icon">!</div>
-          <h3>Locate a Dealer — address formatting &amp; data errors</h3>
+          <h3>Book a Test Drive — WRX: notification email misrouted</h3>
           <span class="issue-label">Resolved</span>
         </div>
+
         <div class="issue-block">
           <div class="k">What we found</div>
-          <p>A QC pass across the full Locate a Dealer listing turned up 8 address issues — inconsistent spacing
-          around house-number ranges, an incomplete address missing suburb/city, duplicated city and suburb names,
-          and two misspelled city names ("Gabarone" and "Capetown").</p>
+          <p>During routine form testing, the Bellville notification rule was found routing off <strong>Vehicle Model</strong>
+          instead of <strong>Select Dealer</strong> — the only dealer of the 13 configured this way. Every other dealer
+          notification rule was correctly set up against Select Dealer, confirming this was an isolated case rather than a
+          build-wide issue. Because "Subaru Bellville" was never a valid Vehicle Model value, the condition never matched,
+          and WordPress rejected the notification with "Cannot send email because the TO address is invalid."</p>
+
+          <div class="k">Root cause</div>
+          <p>The Bellville rule was confirmed correct as recently as last month's testing, so this was a recent regression
+          rather than a longstanding fault — how the field reverted isn't yet clear, but the config on every other dealer
+          remained untouched and correct throughout. The newly deployed Subaru Lead Monitor flagged the misrouted
+          notification through its live monitoring layer, which is exactly the kind of silent failure it was built to catch.</p>
 
           <div class="k">Fix applied</div>
-          <p>All 8 entries corrected directly in the dealer listing:</p>
-          <table>
-            <tr><th>Dealer</th><th>Fix</th></tr>
-            <tr><td>Dave's Panel Beaters cc</td><td>Fixed spacing: "6 - 8 Ries Street" → "6-8 Ries Street"</td></tr>
-            <tr><td>Renew-it Umhlanga</td><td>Fixed spacing: "1 - 3 Zenith Drive" → "1-3 Zenith Drive"</td></tr>
-            <tr><td>Panel Lab</td><td>Fixed incomplete address (trailing comma, missing suburb/city)</td></tr>
-            <tr><td>Rolling Wheels</td><td>Corrected city spelling: "Gabarone" → "Gaborone"</td></tr>
-            <tr><td>BB Motors Approved Repair Centre</td><td>Corrected city spelling: "Gabarone" → "Gaborone"</td></tr>
-            <tr><td>Ross Champion Durban</td><td>Corrected road name, removed duplication: "335 Mahatma Ghandi, Durban Durban KZN" → "335 Mahatma Gandhi Road, Durban, KZN"</td></tr>
-            <tr><td>Subaru Somerset West</td><td>Corrected city spelling: "Capetown" → "Cape Town"</td></tr>
-            <tr><td>De Jongh's Panelbeating Centre</td><td>Removed duplicated word: "Strand Strand Western Cape" → "Strand, Western Cape"</td></tr>
-          </table>
+          <p>Corrected the Bellville rule to route off Select Dealer, in line with all other dealers, as soon as the Lead
+          Monitor surfaced the error. Confirmed fixed with a live test submission — webhook fired and the lead synced
+          successfully to the CRM.</p>
+
+          <div class="k">Verification log</div>
+          <div class="log-box">2026-06-24 13:37:47 — GF_Webhooks: Sending lead to CMS Cloud API (leadsv3.cmscloud.co.za)
+  dealerRef: CF151 · dealerFloor: NEWSUBARU · source: SUBARU SA LEAD
+  contact: test test · (082) 840-7653
+
+2026-06-24 13:37:48 — GF_Webhooks: Webhook sent. <span class="log-ok">Response code: 200</span>
+  { "code": "00", "leadReference": "d11584ee-d39a-470b-9832-b77e02f13e03",
+    "status": "Success", "message": "Lead Submission Successful" }</div>
+          <div class="log-note">Note: an unrelated background-process timeout appeared in the same log (Admin Ajax dispatch,
+          cURL 1000ms) — this did not affect the lead reaching the CRM and is a known async-dispatch retry, not a data-loss issue.</div>
         </div>
-      </div>
-
-      <div class="issue">
-        <div class="issue-head">
-          <div class="issue-icon">!</div>
-          <h3>Broken article images — flagged blog posts</h3>
-          <span class="issue-label">Resolved</span>
-        </div>
-        <div class="issue-block">
-          <div class="k">What we found</div>
-          <p>Images were not displaying correctly across the blog articles flagged in the shared document.</p>
-
-          <div class="k">Fix applied</div>
-          <p>All flagged articles fixed and images confirmed displaying correctly. As a precaution, we also ran a
-          full pass across the rest of the site to check for any other broken images — no further issues found.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 5 -->
-    <div class="section" id="previous">
-      <div class="eyebrow">Section 05 · Archive</div>
-      <h2>Previous audits</h2>
-
-      <div class="archive-list">
-        <a class="archive-item" href="archive-2026-06-29-2026-07-03.html" target="_blank">
-          <div>
-            <div class="a-title">SubaruSA — Dev: 29 June 2026 – 03 July 2026</div>
-            <div class="a-meta">Reference SUBARUSA1 · Full report, task details, plugin audit, API check &amp; issues log</div>
-          </div>
-          <div class="a-arrow">View →</div>
-        </a>
       </div>
     </div>
 
@@ -598,7 +646,8 @@
     });
   });
 
-  const MARKER = 120;
+  // Scrollspy: find the section whose top has most recently passed the marker line
+  const MARKER = 120; // px from top of viewport
 
   function updateActiveSection(){
     let currentId = sections[0].id;
