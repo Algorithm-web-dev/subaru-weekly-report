@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SubaruSA — Dev</title>
+<style>
+  :root{
+    --sidebar-bg:#0d1117;
+    --sidebar-border:#1c2230;
+    --accent:#3b63f0;
+    --accent-soft:#e8edfc;
+    --green:#16a34a;
+    --page-bg:#f4f6fb;
+    --card-bg:#ffffff;
+    --card-border:#e5e8f0;
+    --text-dark:#12131a;
+    --text-muted:#6b7280;
+    --text-faint:#9aa0ad;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family: -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+    background: var(--page-bg);
+    color: var(--text-dark);
+    display:flex;
+    min-height:100vh;
+  }
+
+  .sidebar{
+    width:260px;
+    flex-shrink:0;
+    background: var(--sidebar-bg);
+    color:#e5e7ef;
+    padding:28px 22px;
+    display:flex;
+    flex-direction:column;
+    position:fixed;
+    top:0; left:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .brand{ margin-bottom:32px; }
+  .brand-name{ font-size:20px; font-weight:800; color:#5b82f5; letter-spacing:0.2px; }
+  .brand-tag{ font-size:10px; letter-spacing:1.5px; color:#5c6270; margin-top:4px; text-transform:uppercase; }
+
+  .side-label{
+    font-size:10px; letter-spacing:1.5px; color:#565c6b; text-transform:uppercase; margin-bottom:10px;
+  }
+  .doc-block{ margin-bottom:28px; }
+  .doc-title{ font-size:13px; font-weight:600; color:#f1f2f6; }
+
+  .nav{ display:flex; flex-direction:column; gap:4px; margin-bottom:auto; }
+  .nav-item{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 10px; border-radius:8px;
+    font-size:13px; color:#a7abb8; cursor:pointer;
+    transition: background .15s ease, color .15s ease;
+    user-select:none;
+    text-decoration:none;
+  }
+  .nav-item:hover{ background:#151a24; color:#e2e4ea; }
+  .nav-item.active{ background: var(--accent); color:#fff; }
+  .nav-num{
+    font-size:10px; width:20px; height:20px; border-radius:5px;
+    display:flex; align-items:center; justify-content:center;
+    background:#1a2030; color:#8b93a8; flex-shrink:0;
+  }
+  .nav-item.active .nav-num{ background:rgba(255,255,255,.25); color:#fff; }
+
+  .sidebar-footer{
+    border-top:1px solid var(--sidebar-border);
+    padding-top:18px; margin-top:18px;
+    font-size:12px; color:#8b93a8;
+  }
+  .sidebar-footer .row{ margin-bottom:14px; }
+  .sidebar-footer .label{ color:#565c6b; font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;}
+  .sidebar-footer .value{ color:#e2e4ea; font-weight:600; }
+
+  .main{ flex:1; margin-left:260px; padding:56px 64px; max-width:1100px; }
+  .section{ display:block; scroll-margin-top:40px; padding-bottom:60px; }
+  .section + .section{ border-top:1px solid var(--card-border); padding-top:56px; }
+
+  .back-link{
+    position:fixed; top:20px; right:24px; z-index:1000;
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:13px; font-weight:700; color:#fff;
+    background: var(--accent);
+    padding:9px 16px; border-radius:999px;
+    text-decoration:none;
+    box-shadow:0 4px 14px rgba(59,99,240,0.35);
+    transition: background .15s ease, transform .15s ease;
+  }
+  .back-link:hover{ background:#2d4fd1; transform:translateY(-1px); }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size:12px; font-weight:600; letter-spacing:.3px;
+    padding:6px 14px; border-radius:999px; margin-bottom:20px;
+  }
+  .badge-dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); }
+
+  h1{ font-size:42px; font-weight:800; line-height:1.1; letter-spacing:-1px; margin-bottom:20px;}
+  .lede{ font-size:15px; line-height:1.7; color: var(--text-muted); max-width:760px; margin-bottom:30px; }
+
+  .meta-row{ display:flex; gap:56px; padding-top:24px; border-top:1px solid var(--card-border); margin-bottom:44px; flex-wrap:wrap;}
+  .meta-item .label{ font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-faint); margin-bottom:6px;}
+  .meta-item .value{ font-size:15px; font-weight:700; }
+  .meta-item .value.link{ color: var(--accent); }
+
+  .eyebrow{ font-size:12px; font-weight:700; letter-spacing:1px; color: var(--accent); text-transform:uppercase; margin-bottom:8px;}
+  h2{ font-size:26px; font-weight:800; margin-bottom:24px; letter-spacing:-.3px;}
+
+  .stat-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:56px; }
+  .stat-card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:22px 24px; }
+  .stat-card .stat-label{ font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px;}
+  .stat-card .stat-num{ font-size:34px; font-weight:800; margin-bottom:6px; }
+  .stat-card .stat-num.blue{ color: var(--accent); }
+  .stat-card .stat-num.green{ color: var(--green); }
+  .stat-card .stat-sub{ font-size:13px; color: var(--text-muted); }
+
+  .timeline{ position:relative; padding-left:44px; }
+  .timeline::before{
+    content:''; position:absolute; left:15px; top:14px; bottom:14px; width:2px; background:var(--card-border);
+  }
+  .t-step{ position:relative; margin-bottom:26px; }
+  .t-num{
+    position:absolute; left:-44px; top:0; width:32px; height:32px; border-radius:50%;
+    background:#fff; border:2px solid var(--accent); color:var(--accent);
+    font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;
+  }
+  .t-num.num-done{ border-color:#16a34a; color:#16a34a; }
+  .t-num.num-scheduled{ border-color:#e2a300; color:#e2a300; }
+  .t-card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:22px 24px; }
+  .t-card-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .t-card-head h3{ font-size:16px; font-weight:700; }
+  .t-week-tag{ font-size:11px; color:var(--text-faint); background:#f1f2f6; padding:3px 10px; border-radius:6px; font-weight:600; }
+  .t-week-tag.tag-done{ background:#e7f7ec; color:#16a34a; }
+  .t-week-tag.tag-scheduled{ background:#fff4e0; color:#b06b00; }
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{ font-size:13px; background:#f6f7fb; border:1px solid var(--card-border); border-left:3px solid var(--card-border); padding:8px 14px; border-radius:8px; color:var(--text-dark); }
+  .chip.chip-done{ border-left-color:#16a34a; }
+  .chip.chip-scheduled{ border-left-color:#e2a300; }
+
+  .task{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
+  .task-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+  .task-num{ width:26px; height:26px; border-radius:7px; background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .task-head h3{ font-size:17px; font-weight:700; }
+  .status-pill{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; }
+  .status-done{ background:#e7f7ec; color:#16a34a; }
+  .status-progress{ background:#fff4e0; color:#b06b00; }
+  .task-body{ font-size:13.5px; color:var(--text-muted); line-height:1.6; margin-top:10px; padding-left:38px; }
+
+  table{ width:100%; border-collapse:collapse; margin-top:12px; font-size:13px; }
+  th{ text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--text-faint); padding:8px 10px; border-bottom:1px solid var(--card-border); }
+  td{ padding:8px 10px; border-bottom:1px solid #f0f1f5; }
+  tr:last-child td{ border-bottom:none; }
+  .mono{ font-variant-numeric: tabular-nums; color:var(--text-dark); font-weight:600;}
+  .subhead{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--text-faint); margin:18px 0 6px 38px; }
+
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; margin-left:38px; margin-top:6px;}
+  .form-row{ display:flex; justify-content:space-between; font-size:13.5px; padding:6px 0; border-bottom:1px dashed #eef0f4; }
+  .form-row .n{ color:var(--text-dark); }
+  .form-row .v{ font-weight:700; color:var(--accent); }
+  .flag{ font-size:12px; color:#b06b00; font-weight:600; margin-left:38px; margin-top:4px;}
+
+  .api-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:14px 0 8px 38px; }
+  .api-box{ background:#f6f7fb; border-radius:10px; padding:14px 16px; }
+  .api-box .k{ font-size:10px; text-transform:uppercase; color:var(--text-faint); letter-spacing:.5px; margin-bottom:4px;}
+  .api-box .v{ font-size:20px; font-weight:800; }
+
+  .issue{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
+  .issue-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+  .issue-icon{ width:26px; height:26px; border-radius:7px; background:#fdecec; color:#dc2626; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800;}
+  .issue-head h3{ font-size:17px; font-weight:700; }
+  .issue-label{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; background:#e7f7ec; color:#16a34a; }
+  .issue-block{ margin-left:38px; margin-top:14px; }
+  .issue-block .k{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-faint); margin-bottom:4px; font-weight:700; }
+  .issue-block p{ font-size:13.5px; color:var(--text-dark); line-height:1.6; margin-bottom:16px; }
+  .log-box{
+    background:#0d1117; color:#c9d1d9; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:11.5px; line-height:1.7; border-radius:10px; padding:16px 18px; overflow-x:auto; white-space:pre;
+    margin-bottom:6px;
+  }
+  .log-ok{ color:#3fb950; }
+  .log-note{ font-size:12px; color:var(--text-faint); margin-top:6px;}
+
+  .plugin-dropdown{ margin-left:38px; margin-top:14px; }
+  .plugin-dropdown summary{
+    cursor:pointer; font-size:13px; font-weight:700; color: var(--accent);
+    list-style:none; display:flex; align-items:center; gap:6px; padding:2px 0;
+    user-select:none;
+  }
+  .plugin-dropdown summary::-webkit-details-marker{ display:none; }
+  .plugin-dropdown summary::before{
+    content:'▸'; font-size:11px; transition: transform .15s ease; display:inline-block;
+  }
+  .plugin-dropdown[open] summary::before{ transform: rotate(90deg); }
+  .plugin-dropdown table{ width:100%; margin-top:10px; background:#f6f7fb; border-radius:10px; padding:4px 6px; }
+  .plugin-dropdown th, .plugin-dropdown td{ padding:8px 14px; }
+
+  .empty-state{
+    background:var(--card-bg); border:1px dashed var(--card-border); border-radius:14px;
+    padding:36px 28px; text-align:center; color:var(--text-faint); font-size:13.5px;
+  }
+
+  .archive-list{ display:flex; flex-direction:column; gap:12px; }
+  .archive-item{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px;
+    padding:16px 20px; text-decoration:none; color:var(--text-dark); transition: border-color .15s ease;
+  }
+  .archive-item:hover{ border-color: var(--accent); }
+  .archive-item .a-title{ font-size:14px; font-weight:700; margin-bottom:3px; }
+  .archive-item .a-meta{ font-size:12px; color:var(--text-faint); }
+  .archive-item .a-arrow{ font-size:14px; color:var(--accent); font-weight:700; flex-shrink:0; }
+
+  @media(max-width:900px){
+    body{flex-direction:column;}
+    .sidebar{position:relative; width:100%; height:auto;}
+    .main{margin-left:0; padding:32px 24px; height:auto; overflow-y:visible;}
+    .stat-cards{grid-template-columns:1fr;}
+    .meta-row{gap:28px;}
+    .api-grid{grid-template-columns:repeat(2,1fr);}
+    .form-grid{grid-template-columns:1fr;}
+    .back-link{top:14px; right:14px; padding:7px 13px; font-size:12px;}
+  }
+
+  @media(max-width:600px){
+    .main{padding:24px 18px;}
+    h1{font-size:30px; letter-spacing:-.5px;}
+    h2{font-size:21px;}
+    .lede{font-size:14px;}
+    .badge{font-size:11px; padding:5px 12px;}
+    .meta-row{gap:20px 32px;}
+    .stat-card{padding:18px 18px;}
+    .stat-card .stat-num{font-size:28px;}
+
+    .timeline{padding-left:34px;}
+    .timeline::before{left:11px;}
+    .t-num{left:-34px; width:26px; height:26px; font-size:12px;}
+    .t-card{padding:18px 16px;}
+    .t-card-head h3{font-size:15px;}
+    .chip{font-size:12.5px; padding:8px 12px;}
+
+    .task{padding:20px 18px;}
+    .task-head h3{font-size:15.5px;}
+    .task-body{padding-left:0; margin-top:12px;}
+    .subhead{margin-left:0;}
+    .form-grid{margin-left:0;}
+    .api-grid{grid-template-columns:1fr 1fr; margin-left:0;}
+    .flag{margin-left:0;}
+    .plugin-dropdown{margin-left:0;}
+
+    .issue{padding:20px 18px;}
+    .issue-head h3{font-size:15.5px;}
+    .issue-block{margin-left:0;}
+    .log-box{font-size:10.5px; padding:12px 14px;}
+
+    table{font-size:12px;}
+    th, td{padding:7px 8px;}
+
+    .archive-item{flex-direction:column; align-items:flex-start; gap:6px;}
+  }
+</style>
+</head>
+<body>
+
+  <a href="index.html" class="back-link">← Back to current report</a>
+
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-name">Algorithm</div>
+      <div class="brand-tag">Turn potential into performance</div>
+    </div>
+
+    <div class="side-label">Document</div>
+    <div class="doc-block">
+      <div class="doc-title">SubaruSA — Dev</div>
+    </div>
+
+    <div class="side-label">Sections</div>
+    <div class="nav">
+      <a class="nav-item active" href="#overview" data-section="overview"><span class="nav-num">01</span> Overview</a>
+      <a class="nav-item" href="#breakdown" data-section="breakdown"><span class="nav-num">02</span> Weekly breakdown</a>
+      <a class="nav-item" href="#details" data-section="details"><span class="nav-num">03</span> Task details</a>
+      <a class="nav-item" href="#issues" data-section="issues"><span class="nav-num">04</span> Issues & fixes</a>
+      <a class="nav-item" href="#previous" data-section="previous"><span class="nav-num">05</span> Previous audits</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="row"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
+      <div class="row"><div class="label">Report date</div><div class="value">03 August 2026 – 07 August 2026</div></div>
+      <div class="row"><div class="label">Reference</div><div class="value">SUBARUSA6</div></div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- SECTION 1 -->
+    <div class="section" id="overview">
+      <div class="badge"><span class="badge-dot"></span>Weekly Task Report · Subaru</div>
+      <h1>SubaruSA — Dev</h1>
+      <p class="lede">
+        Four items closed out this week alongside two client-facing form/pop-up fixes. The referral page now has the
+        new "Customised Initials" field with duplicate fields cleaned up across the form. The client briefing form
+        now supports up to 10 image uploads per submission, and uploaded screenshots correctly display in the
+        client's confirmation email. The outdated Maintenance Plan pop-up has been removed from the Crosstrek and
+        Forester product pages and replaced with the approved version — this was flagged as a priority item and was
+        actioned and sent for sign-off within the 48-hour window. Two Bird Life items (competition banner/landing
+        page and events page listing) remain blocked pending design assets from Robin and copy from Nash. The
+        Outdoor &amp; Adventure Expo 2026 page remains awaiting client review, no update this period. A busy pipeline
+        of scheduled maintenance, event removals, and a new dealership API integration is coming up through August.
+      </p>
+
+      <div class="meta-row">
+        <div class="meta-item"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
+        <div class="meta-item"><div class="label">Report date</div><div class="value">03 August 2026 – 07 August 2026</div></div>
+        <div class="meta-item"><div class="label">Reference</div><div class="value">SUBARUSA6</div></div>
+        <div class="meta-item"><div class="label">Department</div><div class="value link">Dev</div></div>
+      </div>
+
+      <div class="eyebrow">Section 01 · This week</div>
+      <h2>Where things stand</h2>
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-label">Tasks completed</div>
+          <div class="stat-num blue">4</div>
+          <div class="stat-sub">Referral form update, briefing form image uploads, screenshots in confirmation email, Maintenance Plan pop-up replaced</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tasks still working on</div>
+          <div class="stat-num green">3</div>
+          <div class="stat-sub">Bird Life competition &amp; event (blocked on assets), Outdoor &amp; Adventure Expo page (awaiting review)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Scheduled ahead</div>
+          <div class="stat-num blue">9</div>
+          <div class="stat-sub">Maintenance 1/2 &amp; 2/2, Somerset West API integration, event removals, Eston Show build, website refresh</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="breakdown">
+      <div class="eyebrow">Section 02 · Progress</div>
+      <h2>Weekly breakdown</h2>
+
+      <div class="timeline">
+        <div class="t-step">
+          <div class="t-num num-done">1</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>Completed This Week</h3><span class="t-week-tag tag-done">Done</span></div>
+            <div class="chips">
+              <div class="chip chip-done">Referral page form updated — new "Customised Initials" field added, duplicate fields removed</div>
+              <div class="chip chip-done">Client briefing form now supports up to 10 image uploads per submission</div>
+              <div class="chip chip-done">Uploaded screenshots now correctly display in the client's confirmation email</div>
+              <div class="chip chip-done">Maintenance Plan pop-up replaced on Crosstrek &amp; Forester product pages (P1, actioned within 48hrs)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-step">
+          <div class="t-num num-scheduled">2</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>In Progress</h3><span class="t-week-tag tag-scheduled">Scheduled</span></div>
+            <div class="chips">
+              <div class="chip chip-scheduled">Bird Life Competition — homepage banner &amp; landing page — blocked, awaiting design (Robin) &amp; copy (Nash)</div>
+              <div class="chip chip-scheduled">Bird Life Event — events page listing &amp; pop-up — blocked, same asset dependency</div>
+              <div class="chip chip-scheduled">Outdoor &amp; Adventure Expo 2026 events page — awaiting client review, no update this period</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-step">
+          <div class="t-num num-scheduled">3</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>Tasks Still to Come</h3><span class="t-week-tag tag-scheduled">Scheduled</span></div>
+            <div class="chips">
+              <div class="chip chip-scheduled">Subaru Maintenance :: Web Dev 1/2 — 11 August</div>
+              <div class="chip chip-scheduled">Pre-owned API — Somerset West dealer integration — 11-13 August</div>
+              <div class="chip chip-scheduled">Garmin Run Series — event removal — 17 August</div>
+              <div class="chip chip-scheduled">Eston Show 2026 — event build — 18 August</div>
+              <div class="chip chip-scheduled">Garmin MTB Classic (JHB) — event removal — 24 August</div>
+              <div class="chip chip-scheduled">Subaru Maintenance :: Web Dev 2/2 — 27 August</div>
+              <div class="chip chip-scheduled">New Maintenance Plan page — Clarity insights &amp; key learnings — 31 August</div>
+              <div class="chip chip-scheduled">Eston Show 2026 — event removal — 31 August</div>
+              <div class="chip chip-scheduled">Website refresh — planned for January 2027</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="details">
+      <div class="eyebrow">Section 03 · Detail</div>
+      <h2>Task details</h2>
+
+      <!-- TASK 1 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">1</div>
+          <h3>Referral Page Form Update</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Added a new, non-mandatory "Customised Initials" field to the referral page form, limited to three characters. Identified and fixed duplicate fields/headings that had been flagged across the whole form. Completed and sent to client 5 August.</div>
+      </div>
+
+      <!-- TASK 2 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">2</div>
+          <h3>Client Briefing Form — Multiple Image Uploads</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Built in support for multiple image attachments per submission. The form now accepts up to 10 images per submission. Completed 5 August.</div>
+      </div>
+
+      <!-- TASK 3 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">3</div>
+          <h3>Client Briefing Form — Screenshots in Confirmation Email</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Investigated and resolved the issue preventing uploaded screenshots from appearing in the client's confirmation email after form submission. Screenshots now display correctly. Completed 5 August.</div>
+      </div>
+
+      <!-- TASK 4 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">4</div>
+          <h3>Maintenance Plan Pop-up Replacement</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Flagged as a priority item for resolution within 48 hours. Removed the outdated Maintenance Plan pop-up from the Crosstrek and Forester product pages and replaced it with the approved version, per the supplied reference images. Tested to confirm only the new pop-up displays. Completed and sent for sign-off 5 August.</div>
+      </div>
+
+      <!-- TASK 5 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">5</div>
+          <h3>Bird Life Competition — Banner &amp; Landing Page</h3>
+          <span class="status-pill status-progress">Blocked</span>
+        </div>
+        <div class="task-body">New homepage banner (linking to a new competition landing page) plus the landing page itself — copy, form, and terms &amp; conditions. Blocked pending design assets from Robin and copy from Nash. Target: live 7 August, with staging QC'd internally by 4 August — at risk given assets are still outstanding.</div>
+      </div>
+
+      <!-- TASK 6 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">6</div>
+          <h3>Bird Life Event — Events Page Listing &amp; Pop-up</h3>
+          <span class="status-pill status-progress">Blocked</span>
+        </div>
+        <div class="task-body">New event listing on the events page (linking through to the Bird Life event page) plus a pop-up, in date order alongside existing events. Blocked pending the same design and copy assets as the competition banner.</div>
+      </div>
+
+      <!-- TASK 7 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">7</div>
+          <h3>Outdoor &amp; Adventure Expo 2026 — Events Page</h3>
+          <span class="status-pill status-progress">Awaiting client review</span>
+        </div>
+        <div class="task-body">Carried over from prior period. Built and responsive on staging, awaiting client review — no update this period.</div>
+      </div>
+
+      <!-- TASK 8 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">8</div>
+          <h3>Subaru Maintenance :: Web Dev 1/2</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Scheduled for 11 August.</div>
+      </div>
+
+      <!-- TASK 9 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">9</div>
+          <h3>Pre-owned API — Somerset West Dealer Integration</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Add Subaru Somerset West (Dealer ID ATU7SSW00) to the pre-owned API so stock can be pulled through automatically. Scoped as three 8-hour stages: review the existing integration and map the approach (11 August), configure and connect the dealership (12 August), then test and validate stock/dealership data before sign-off (13 August).</div>
+      </div>
+
+      <!-- TASK 10 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">10</div>
+          <h3>Garmin Run Series — Event Removal</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Remove the Garmin Run Series event from the homepage and events page once concluded. Scheduled for 17 August (Monday, as the event ends over the preceding weekend).</div>
+      </div>
+
+      <!-- TASK 11 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">11</div>
+          <h3>Eston Show 2026 — Event Build</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Add the Eston Show 2026 teaser to the homepage in the correct date order, linking through to the events page. Create the event and pop-up on the events page with a call-to-action through to the official Eston Show ticketing site. Scheduled for 18 August.</div>
+      </div>
+
+      <!-- TASK 12 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">12</div>
+          <h3>Garmin MTB Classic (JHB) — Event Removal</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Remove the Garmin MTB Classic (JHB) event from the homepage and events page once concluded. Scheduled for 24 August (Monday, as the event ends over the preceding weekend).</div>
+      </div>
+
+      <!-- TASK 13 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">13</div>
+          <h3>Subaru Maintenance :: Web Dev 2/2</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Scheduled for 27 August.</div>
+      </div>
+
+      <!-- TASK 14 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">14</div>
+          <h3>New Maintenance Plan Page — Clarity Insights</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Review the new "Love Our New Standard" Maintenance Plan page in Microsoft Clarity — heatmap, user journey, user behaviour, and scroll depth — and provide key learnings to inform future campaigns. Scheduled for 31 August.</div>
+      </div>
+
+      <!-- TASK 15 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">15</div>
+          <h3>Eston Show 2026 — Event Removal</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Remove the Eston Show 2026 event from the homepage and events page once concluded. Scheduled for 31 August.</div>
+      </div>
+
+      <!-- TASK 16 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">16</div>
+          <h3>Website refresh</h3>
+          <span class="status-pill status-progress">Planned</span>
+        </div>
+        <div class="task-body">Long-term project planned for January 2027.</div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="issues">
+      <div class="eyebrow">Section 04 · Quality assurance</div>
+      <h2>Issues found &amp; fixes</h2>
+
+      <div class="issue">
+        <div class="issue-head">
+          <div class="issue-icon">!</div>
+          <h3>Referral page form — CSV upload bug</h3>
+          <span class="issue-label">Resolved</span>
+        </div>
+        <div class="issue-block">
+          <div class="k">What we found</div>
+          <p>While fixing the duplicate fields flagged on the referral page form, a bug surfaced in the dealer CSV
+          file upload, which needed debugging before the fix could be completed correctly.</p>
+
+          <div class="k">Fix applied</div>
+          <p>Debugged the issue and re-uploaded the correct CSV file. Extra time was allocated beyond the original
+          estimate to resolve this properly before sending the completed task to the client.</p>
+        </div>
+      </div>
+
+      <div class="issue">
+        <div class="issue-head">
+          <div class="issue-icon">!</div>
+          <h3>Maintenance run — outstanding items</h3>
+          <span class="issue-label">Action needed</span>
+        </div>
+        <div class="issue-block">
+          <div class="k">Plugin licenses still missing</div>
+          <p>Carried over — 3 plugins remain outdated pending license keys: Advanced Custom Fields PRO, WP All Export
+          Pro, and WP All Import Pro. Please share current license keys so these can be updated on the next run.</p>
+
+          <div class="k">Contact form testing still pending</div>
+          <p>Carried over — Bev's requested contact form testing has not yet been completed. No update this period;
+          following up to schedule.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="previous">
+      <div class="eyebrow">Section 05 · Archive</div>
+      <h2>Previous audits</h2>
+
+      <div class="archive-list">
+        <a class="archive-item" href="archive-2026-07-27-2026-07-31.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 27 July 2026 – 31 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA5 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-07-20-2026-07-24.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 20 July 2026 – 24 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA4 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-07-13-2026-07-17.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 13 July 2026 – 17 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA3 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-07-06-2026-07-10.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 06 July 2026 – 10 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA2 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-06-29-2026-07-03.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 29 June 2026 – 03 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA1 · Full report, task details, plugin audit, API check &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('.section');
+
+  navItems.forEach(item=>{
+    item.addEventListener('click', ()=>{
+      navItems.forEach(i=>i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  const MARKER = 120;
+
+  function updateActiveSection(){
+    let currentId = sections[0].id;
+    sections.forEach(section=>{
+      const rect = section.getBoundingClientRect();
+      if(rect.top - MARKER <= 0){
+        currentId = section.id;
+      }
+    });
+    navItems.forEach(i=>{
+      i.classList.toggle('active', i.dataset.section === currentId);
+    });
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', ()=>{
+    if(!ticking){
+      window.requestAnimationFrame(()=>{
+        updateActiveSection();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  updateActiveSection();
+</script>
+
+</body>
+</html>
