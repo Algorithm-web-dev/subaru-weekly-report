@@ -456,7 +456,30 @@
           <h3>Homepage Slider (P1)</h3>
           <span class="status-pill status-progress">In progress</span>
         </div>
-        <div class="task-body">Priority homepage slider task, still in progress. Will confirm outcome and send for QC once complete.</div>
+        <div class="task-body">Priority homepage slider task, still in progress. Investigation into the carousel freeze issue reported by some users is complete — findings and action plan below.</div>
+
+        <div class="subhead">Issues identified</div>
+        <div style="margin-left:38px; margin-top:6px;">
+          <p style="font-size:13.5px; color:var(--text-dark); line-height:1.6; margin-bottom:14px;"><strong>Carousel navigation freezes for some users</strong> — certain users report the homepage slider getting stuck and being unable to advance through slides. Root cause is a JavaScript timing conflict between Gravity Forms and the carousel's click handler: on slower connections, Gravity Forms fires a render event that interrupts the carousel's event binding before it completes. Users on fast connections (including our team) do not encounter this.</p>
+
+          <p style="font-size:13.5px; color:var(--text-dark); line-height:1.6; margin-bottom:14px;"><strong>Deprecated jQuery methods in active use</strong> — the site runs jQuery 3.7.1, but several plugins (including the theme, Gravity Forms, and Mega Menu) still use older jQuery APIs (<code>$.fn.click()</code>, <code>$.fn.bind()</code>) deprecated in this version. These are being kept alive by a compatibility shim (JQMIGRATE), which adds overhead and masks potential failures.</p>
+
+          <p style="font-size:13.5px; color:var(--text-dark); line-height:1.6; margin-bottom:14px;"><strong>Mega Menu plugin using outdated CSS method</strong> — the Mega Menu plugin sets a CSS custom property using a number value without a unit (e.g. <code>px</code>), which is deprecated in jQuery 3.x. This can cause incorrect mobile menu height on resize and contributes to the overall jQuery compatibility warnings on the page.</p>
+
+          <p style="font-size:13.5px; color:var(--text-dark); line-height:1.6; margin-bottom:0;"><strong>Meta Pixel — invalid currency parameter</strong> — the Meta Pixel is firing with an incorrectly formatted <code>currency</code> parameter. This will cause tracking events to be rejected by Meta, meaning conversion data for this page may not be recording accurately in Ads Manager.</p>
+        </div>
+
+        <div class="subhead">Actions to resolve</div>
+        <div style="margin-left:38px; margin-top:6px;">
+          <table>
+            <tr><th style="width:36px;">#</th><th>Action</th></tr>
+            <tr><td class="mono">1</td><td>Fix carousel initialisation order — move the carousel's JS init to fire on <code>window.load</code> instead of <code>document.ready</code>, so it binds its events after Gravity Forms has finished rendering. Immediate fix for the freeze.</td></tr>
+            <tr><td class="mono">2</td><td>Update carousel nav event handlers — replace deprecated <code>.click()</code> and <code>.bind()</code> calls in the carousel/theme script with <code>.on('click', ...)</code>. Resolves the root jQuery deprecation causing the binding failure.</td></tr>
+            <tr><td class="mono">3</td><td>Update or replace the Mega Menu plugin — the current version isn't compatible with jQuery 3.x. Update to the latest version or switch to an alternative that supports modern jQuery.</td></tr>
+            <tr><td class="mono">4</td><td>Fix the Meta Pixel currency parameter — review the pixel event firing on this page and correct the <code>currency</code> value to a valid ISO 4217 code (e.g. "ZAR"). Ensures conversion tracking is accurate.</td></tr>
+            <tr><td class="mono">5</td><td>Defer the Meta Pixel script — load it asynchronously so it doesn't block page parsing, reducing timing issues on slower connections.</td></tr>
+          </table>
+        </div>
       </div>
 
       <!-- TASK 6 -->
