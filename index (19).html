@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SubaruSA — Dev</title>
+<style>
+  :root{
+    --sidebar-bg:#0d1117;
+    --sidebar-border:#1c2230;
+    --accent:#3b63f0;
+    --accent-soft:#e8edfc;
+    --green:#16a34a;
+    --page-bg:#f4f6fb;
+    --card-bg:#ffffff;
+    --card-border:#e5e8f0;
+    --text-dark:#12131a;
+    --text-muted:#6b7280;
+    --text-faint:#9aa0ad;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family: -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+    background: var(--page-bg);
+    color: var(--text-dark);
+    display:flex;
+    min-height:100vh;
+  }
+
+  .sidebar{
+    width:260px;
+    flex-shrink:0;
+    background: var(--sidebar-bg);
+    color:#e5e7ef;
+    padding:28px 22px;
+    display:flex;
+    flex-direction:column;
+    position:fixed;
+    top:0; left:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .brand{ margin-bottom:32px; }
+  .brand-name{ font-size:20px; font-weight:800; color:#5b82f5; letter-spacing:0.2px; }
+  .brand-tag{ font-size:10px; letter-spacing:1.5px; color:#5c6270; margin-top:4px; text-transform:uppercase; }
+
+  .side-label{
+    font-size:10px; letter-spacing:1.5px; color:#565c6b; text-transform:uppercase; margin-bottom:10px;
+  }
+  .doc-block{ margin-bottom:28px; }
+  .doc-title{ font-size:13px; font-weight:600; color:#f1f2f6; }
+
+  .nav{ display:flex; flex-direction:column; gap:4px; margin-bottom:auto; }
+  .nav-item{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 10px; border-radius:8px;
+    font-size:13px; color:#a7abb8; cursor:pointer;
+    transition: background .15s ease, color .15s ease;
+    user-select:none;
+    text-decoration:none;
+  }
+  .nav-item:hover{ background:#151a24; color:#e2e4ea; }
+  .nav-item.active{ background: var(--accent); color:#fff; }
+  .nav-num{
+    font-size:10px; width:20px; height:20px; border-radius:5px;
+    display:flex; align-items:center; justify-content:center;
+    background:#1a2030; color:#8b93a8; flex-shrink:0;
+  }
+  .nav-item.active .nav-num{ background:rgba(255,255,255,.25); color:#fff; }
+
+  .sidebar-footer{
+    border-top:1px solid var(--sidebar-border);
+    padding-top:18px; margin-top:18px;
+    font-size:12px; color:#8b93a8;
+  }
+  .sidebar-footer .row{ margin-bottom:14px; }
+  .sidebar-footer .label{ color:#565c6b; font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;}
+  .sidebar-footer .value{ color:#e2e4ea; font-weight:600; }
+
+  .main{ flex:1; margin-left:260px; padding:56px 64px; max-width:1100px; }
+  .section{ display:block; scroll-margin-top:40px; padding-bottom:60px; }
+  .section + .section{ border-top:1px solid var(--card-border); padding-top:56px; }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size:12px; font-weight:600; letter-spacing:.3px;
+    padding:6px 14px; border-radius:999px; margin-bottom:20px;
+  }
+  .badge-dot{ width:6px; height:6px; border-radius:50%; background: var(--accent); }
+
+  h1{ font-size:42px; font-weight:800; line-height:1.1; letter-spacing:-1px; margin-bottom:20px;}
+  .lede{ font-size:15px; line-height:1.7; color: var(--text-muted); max-width:760px; margin-bottom:30px; }
+
+  .meta-row{ display:flex; gap:56px; padding-top:24px; border-top:1px solid var(--card-border); margin-bottom:44px; flex-wrap:wrap;}
+  .meta-item .label{ font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--text-faint); margin-bottom:6px;}
+  .meta-item .value{ font-size:15px; font-weight:700; }
+  .meta-item .value.link{ color: var(--accent); }
+
+  .eyebrow{ font-size:12px; font-weight:700; letter-spacing:1px; color: var(--accent); text-transform:uppercase; margin-bottom:8px;}
+  h2{ font-size:26px; font-weight:800; margin-bottom:24px; letter-spacing:-.3px;}
+
+  .stat-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:56px; }
+  .stat-card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:22px 24px; }
+  .stat-card .stat-label{ font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px;}
+  .stat-card .stat-num{ font-size:34px; font-weight:800; margin-bottom:6px; }
+  .stat-card .stat-num.blue{ color: var(--accent); }
+  .stat-card .stat-num.green{ color: var(--green); }
+  .stat-card .stat-sub{ font-size:13px; color: var(--text-muted); }
+
+  .timeline{ position:relative; padding-left:44px; }
+  .timeline::before{
+    content:''; position:absolute; left:15px; top:14px; bottom:14px; width:2px; background:var(--card-border);
+  }
+  .t-step{ position:relative; margin-bottom:26px; }
+  .t-num{
+    position:absolute; left:-44px; top:0; width:32px; height:32px; border-radius:50%;
+    background:#fff; border:2px solid var(--accent); color:var(--accent);
+    font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;
+  }
+  .t-num.num-done{ border-color:#16a34a; color:#16a34a; }
+  .t-num.num-scheduled{ border-color:#e2a300; color:#e2a300; }
+  .t-card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:22px 24px; }
+  .t-card-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .t-card-head h3{ font-size:16px; font-weight:700; }
+  .t-week-tag{ font-size:11px; color:var(--text-faint); background:#f1f2f6; padding:3px 10px; border-radius:6px; font-weight:600; }
+  .t-week-tag.tag-done{ background:#e7f7ec; color:#16a34a; }
+  .t-week-tag.tag-scheduled{ background:#fff4e0; color:#b06b00; }
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{ font-size:13px; background:#f6f7fb; border:1px solid var(--card-border); border-left:3px solid var(--card-border); padding:8px 14px; border-radius:8px; color:var(--text-dark); }
+  .chip.chip-done{ border-left-color:#16a34a; }
+  .chip.chip-scheduled{ border-left-color:#e2a300; }
+
+  .task{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
+  .task-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+  .task-num{ width:26px; height:26px; border-radius:7px; background:var(--accent-soft); color:var(--accent); font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .task-head h3{ font-size:17px; font-weight:700; }
+  .status-pill{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; }
+  .status-done{ background:#e7f7ec; color:#16a34a; }
+  .status-progress{ background:#fff4e0; color:#b06b00; }
+  .task-body{ font-size:13.5px; color:var(--text-muted); line-height:1.6; margin-top:10px; padding-left:38px; }
+
+  table{ width:100%; border-collapse:collapse; margin-top:12px; font-size:13px; }
+  th{ text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--text-faint); padding:8px 10px; border-bottom:1px solid var(--card-border); }
+  td{ padding:8px 10px; border-bottom:1px solid #f0f1f5; }
+  tr:last-child td{ border-bottom:none; }
+  .mono{ font-variant-numeric: tabular-nums; color:var(--text-dark); font-weight:600;}
+  .subhead{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--text-faint); margin:18px 0 6px 38px; }
+
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; margin-left:38px; margin-top:6px;}
+  .form-row{ display:flex; justify-content:space-between; font-size:13.5px; padding:6px 0; border-bottom:1px dashed #eef0f4; }
+  .form-row .n{ color:var(--text-dark); }
+  .form-row .v{ font-weight:700; color:var(--accent); }
+  .flag{ font-size:12px; color:#b06b00; font-weight:600; margin-left:38px; margin-top:4px;}
+
+  .api-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:14px 0 8px 38px; }
+  .api-box{ background:#f6f7fb; border-radius:10px; padding:14px 16px; }
+  .api-box .k{ font-size:10px; text-transform:uppercase; color:var(--text-faint); letter-spacing:.5px; margin-bottom:4px;}
+  .api-box .v{ font-size:20px; font-weight:800; }
+
+  .issue{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; padding:26px 28px; margin-bottom:20px; }
+  .issue-head{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+  .issue-icon{ width:26px; height:26px; border-radius:7px; background:#fdecec; color:#dc2626; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800;}
+  .issue-head h3{ font-size:17px; font-weight:700; }
+  .issue-label{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:auto; background:#e7f7ec; color:#16a34a; }
+  .issue-block{ margin-left:38px; margin-top:14px; }
+  .issue-block .k{ font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--text-faint); margin-bottom:4px; font-weight:700; }
+  .issue-block p{ font-size:13.5px; color:var(--text-dark); line-height:1.6; margin-bottom:16px; }
+  .log-box{
+    background:#0d1117; color:#c9d1d9; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:11.5px; line-height:1.7; border-radius:10px; padding:16px 18px; overflow-x:auto; white-space:pre;
+    margin-bottom:6px;
+  }
+  .log-ok{ color:#3fb950; }
+  .log-note{ font-size:12px; color:var(--text-faint); margin-top:6px;}
+
+  .plugin-dropdown{ margin-left:38px; margin-top:14px; }
+  .plugin-dropdown summary{
+    cursor:pointer; font-size:13px; font-weight:700; color: var(--accent);
+    list-style:none; display:flex; align-items:center; gap:6px; padding:2px 0;
+    user-select:none;
+  }
+  .plugin-dropdown summary::-webkit-details-marker{ display:none; }
+  .plugin-dropdown summary::before{
+    content:'▸'; font-size:11px; transition: transform .15s ease; display:inline-block;
+  }
+  .plugin-dropdown[open] summary::before{ transform: rotate(90deg); }
+  .plugin-dropdown table{ width:100%; margin-top:10px; background:#f6f7fb; border-radius:10px; padding:4px 6px; }
+  .plugin-dropdown th, .plugin-dropdown td{ padding:8px 14px; }
+
+  .empty-state{
+    background:var(--card-bg); border:1px dashed var(--card-border); border-radius:14px;
+    padding:36px 28px; text-align:center; color:var(--text-faint); font-size:13.5px;
+  }
+
+  .archive-list{ display:flex; flex-direction:column; gap:12px; }
+  .archive-item{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px;
+    padding:16px 20px; text-decoration:none; color:var(--text-dark); transition: border-color .15s ease;
+  }
+  .archive-item:hover{ border-color: var(--accent); }
+  .archive-item .a-title{ font-size:14px; font-weight:700; margin-bottom:3px; }
+  .archive-item .a-meta{ font-size:12px; color:var(--text-faint); }
+  .archive-item .a-arrow{ font-size:14px; color:var(--accent); font-weight:700; flex-shrink:0; }
+
+  @media(max-width:900px){
+    body{flex-direction:column;}
+    .sidebar{position:relative; width:100%; height:auto;}
+    .main{margin-left:0; padding:32px 24px; height:auto; overflow-y:visible;}
+    .stat-cards{grid-template-columns:1fr;}
+    .meta-row{gap:28px;}
+    .api-grid{grid-template-columns:repeat(2,1fr);}
+    .form-grid{grid-template-columns:1fr;}
+  }
+
+  @media(max-width:600px){
+    .main{padding:24px 18px;}
+    h1{font-size:30px; letter-spacing:-.5px;}
+    h2{font-size:21px;}
+    .lede{font-size:14px;}
+    .badge{font-size:11px; padding:5px 12px;}
+    .meta-row{gap:20px 32px;}
+    .stat-card{padding:18px 18px;}
+    .stat-card .stat-num{font-size:28px;}
+
+    .timeline{padding-left:34px;}
+    .timeline::before{left:11px;}
+    .t-num{left:-34px; width:26px; height:26px; font-size:12px;}
+    .t-card{padding:18px 16px;}
+    .t-card-head h3{font-size:15px;}
+    .chip{font-size:12.5px; padding:8px 12px;}
+
+    .task{padding:20px 18px;}
+    .task-head h3{font-size:15.5px;}
+    .task-body{padding-left:0; margin-top:12px;}
+    .subhead{margin-left:0;}
+    .form-grid{margin-left:0;}
+    .api-grid{grid-template-columns:1fr 1fr; margin-left:0;}
+    .flag{margin-left:0;}
+    .plugin-dropdown{margin-left:0;}
+
+    .issue{padding:20px 18px;}
+    .issue-head h3{font-size:15.5px;}
+    .issue-block{margin-left:0;}
+    .log-box{font-size:10.5px; padding:12px 14px;}
+
+    table{font-size:12px;}
+    th, td{padding:7px 8px;}
+
+    .archive-item{flex-direction:column; align-items:flex-start; gap:6px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-name">Algorithm</div>
+      <div class="brand-tag">Turn potential into performance</div>
+    </div>
+
+    <div class="side-label">Document</div>
+    <div class="doc-block">
+      <div class="doc-title">SubaruSA — Dev</div>
+    </div>
+
+    <div class="side-label">Sections</div>
+    <div class="nav">
+      <a class="nav-item active" href="#overview" data-section="overview"><span class="nav-num">01</span> Overview</a>
+      <a class="nav-item" href="#breakdown" data-section="breakdown"><span class="nav-num">02</span> Weekly breakdown</a>
+      <a class="nav-item" href="#details" data-section="details"><span class="nav-num">03</span> Task details</a>
+      <a class="nav-item" href="#issues" data-section="issues"><span class="nav-num">04</span> Issues & fixes</a>
+      <a class="nav-item" href="#previous" data-section="previous"><span class="nav-num">05</span> Previous audits</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="row"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
+      <div class="row"><div class="label">Report date</div><div class="value">17 August 2026 – 21 August 2026</div></div>
+      <div class="row"><div class="label">Reference</div><div class="value">SUBARUSA8</div></div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- SECTION 1 -->
+    <div class="section" id="overview">
+      <div class="badge"><span class="badge-dot"></span>Weekly Task Report · Subaru</div>
+      <h1>SubaruSA — Dev</h1>
+      <p class="lede">
+        Three major launches this week. The Bird Fair South Africa event is now live on the homepage and events
+        page, banner and pop-up built to the approved design and copy, with a "Book Your Tickets" CTA. The homepage
+        banner slider has been fixed and is live — the stuck-on-slide-2 issue is resolved, and visible left/right
+        navigation arrows have been added; tested, approved, and confirmed working. The We Buy Back campaign is now
+        fully live: the homepage slider banner (position 2/6), the landing page with "Sell Your Subaru" CTA, and
+        lead form routing to all required recipients. The Bird Life Competition banner &amp; landing page is
+        currently blocked on the client's side. <strong>Subaru Maintenance :: Web Dev 1/2</strong> will be completed
+        early next week — with the volume of event and new page builds this period, it's been pushed slightly to
+        make room. The Eston Show build (due 18 August) also has no update this period. Garmin MTB Classic removal,
+        Maintenance :: Web Dev 2/2, and the Maintenance Plan Clarity insights are still coming up.
+      </p>
+
+      <div class="meta-row">
+        <div class="meta-item"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
+        <div class="meta-item"><div class="label">Report date</div><div class="value">17 August 2026 – 21 August 2026</div></div>
+        <div class="meta-item"><div class="label">Reference</div><div class="value">SUBARUSA8</div></div>
+        <div class="meta-item"><div class="label">Department</div><div class="value link">Dev</div></div>
+      </div>
+
+      <div class="eyebrow">Section 01 · This week</div>
+      <h2>Where things stand</h2>
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-label">Tasks completed</div>
+          <div class="stat-num blue">3</div>
+          <div class="stat-sub">Bird Fair event live, homepage slider fixed &amp; live, We Buy Back campaign live</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tasks still working on</div>
+          <div class="stat-num green">3</div>
+          <div class="stat-sub">Bird Life Competition (blocked by client), Web Dev 1/2 (early next week), Eston Show build — no update this period</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Scheduled ahead</div>
+          <div class="stat-num blue">5</div>
+          <div class="stat-sub">Garmin MTB Classic removal, Web Dev 2/2, Eston Show removal, Clarity insights, website refresh</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="breakdown">
+      <div class="eyebrow">Section 02 · Progress</div>
+      <h2>Weekly breakdown</h2>
+
+      <div class="timeline">
+        <div class="t-step">
+          <div class="t-num num-done">1</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>Completed This Week</h3><span class="t-week-tag tag-done">Done</span></div>
+            <div class="chips">
+              <div class="chip chip-done">Bird Fair South Africa event now live — homepage &amp; events page, "Book Your Tickets" CTA</div>
+              <div class="chip chip-done">Homepage banner slider fixed &amp; live — stuck-on-slide-2 issue resolved, nav arrows added</div>
+              <div class="chip chip-done">We Buy Back campaign now live — homepage slider banner, landing page, lead routing set up</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-step">
+          <div class="t-num num-scheduled">2</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>In Progress</h3><span class="t-week-tag tag-scheduled">Scheduled</span></div>
+            <div class="chips">
+              <div class="chip chip-scheduled">Bird Life Competition — banner &amp; landing page — blocked on the client's side</div>
+              <div class="chip chip-scheduled">Subaru Maintenance :: Web Dev 1/2 — pushed to early next week due to volume of event/page builds this period</div>
+              <div class="chip chip-scheduled">Eston Show 2026 — event build — was due 18 August, no update this period</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-step">
+          <div class="t-num num-scheduled">3</div>
+          <div class="t-card">
+            <div class="t-card-head"><h3>Tasks Still to Come</h3><span class="t-week-tag tag-scheduled">Scheduled</span></div>
+            <div class="chips">
+              <div class="chip chip-scheduled">Garmin MTB Classic (JHB) — event removal — 24 August</div>
+              <div class="chip chip-scheduled">Subaru Maintenance :: Web Dev 2/2 — 27 August</div>
+              <div class="chip chip-scheduled">Eston Show 2026 — event removal — 31 August</div>
+              <div class="chip chip-scheduled">New Maintenance Plan page — Clarity insights &amp; key learnings — 31 August</div>
+              <div class="chip chip-scheduled">Website refresh — planned for January 2027</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="details">
+      <div class="eyebrow">Section 03 · Detail</div>
+      <h2>Task details</h2>
+
+      <!-- TASK 1 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">1</div>
+          <h3>Bird Fair South Africa Event — Now Live</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Created the Bird Fair South Africa event on the homepage and events page, linking through to the official event page, using Robin's approved design and Nash's copy. The banner and pop-up have been built to match the approved design and copy, with a "Book Your Tickets" CTA.<br><br>
+        Event page: <a href="https://www.subaru.co.za/subaru-events/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a><br>
+        Book Your Tickets link: <a href="https://birdlife.glueup.com/event/south-african-bird-fair-2026-187238/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+      </div>
+
+      <!-- TASK 2 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">2</div>
+          <h3>Homepage Banner Slider — Fixed &amp; Live</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Investigated why the homepage banner slider was getting stuck on slide 2 for some users, leaving them unable to move forward, back, or select another slide, and added visible left and right navigation arrows so users can manually move between slides.<br><br>
+        Identified the root cause as a timing conflict between the form plugin and the carousel's click handler, along with some related outdated plugin code contributing to the issue. Applied a fix so the carousel loads correctly and no longer gets stuck, and added the left/right navigation arrows as requested.<br><br>
+        Tested, approved, and now live on the homepage.</div>
+      </div>
+
+      <!-- TASK 3 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">3</div>
+          <h3>We Buy Back Campaign — Now Live</h3>
+          <span class="status-pill status-done">Done</span>
+        </div>
+        <div class="task-body">Once the design alignment changes were signed off, the We Buy Back campaign needed to go live, including the homepage slider banner and landing page, with leads routed to the required recipients.<br><br>
+        Made the final design alignment changes following QC feedback (homepage banner link, bullet point alignment, and heading style). Took the We Buy Back banner live on the homepage slider (position 2/6). Published the We Buy Back landing page live, with the "Sell Your Subaru" CTA. Set up lead form submissions to route through to:<br><br>
+        • info@subaru.co.za (Distribution SSA info)<br>
+        • info@subaruedenvale.co.za<br>
+        • Pedrod@subaru.co.za<br>
+        • Manies@subaru.co.za<br><br>
+        We Buy Back page: <a href="https://www.subaru.co.za/we-buy-back/" target="_blank" style="color:var(--accent); font-weight:600;">view link</a><br>
+        Sell Your Subaru CTA link: <a href="https://www.subaru.co.za/we-buy-back/#sell-subaru" target="_blank" style="color:var(--accent); font-weight:600;">view link</a></div>
+      </div>
+
+      <!-- TASK 4 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">4</div>
+          <h3>Bird Life Competition — Banner &amp; Landing Page</h3>
+          <span class="status-pill status-progress">Blocked by client</span>
+        </div>
+        <div class="task-body">New homepage banner (linking to a new competition landing page) plus the landing page itself — copy, form, and terms &amp; conditions. Currently blocked on the client's side.</div>
+      </div>
+
+      <!-- TASK 5 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">5</div>
+          <h3>Subaru Maintenance :: Web Dev 1/2</h3>
+          <span class="status-pill status-progress">In progress</span>
+        </div>
+        <div class="task-body">With the volume of event and new page builds this period, this has been pushed slightly and will be completed early next week.</div>
+      </div>
+
+      <!-- TASK 6 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">6</div>
+          <h3>Eston Show 2026 — Event Build</h3>
+          <span class="status-pill status-progress">In progress</span>
+        </div>
+        <div class="task-body">Add the Eston Show 2026 teaser to the homepage in the correct date order, linking through to the events page. Create the event and pop-up on the events page with a call-to-action through to the official Eston Show ticketing site. Was due 18 August; no update this period.</div>
+      </div>
+
+      <!-- TASK 7 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">7</div>
+          <h3>Garmin MTB Classic (JHB) — Event Removal</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Remove the Garmin MTB Classic (JHB) event from the homepage and events page once concluded. Scheduled for 24 August.</div>
+      </div>
+
+      <!-- TASK 8 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">8</div>
+          <h3>Subaru Maintenance :: Web Dev 2/2</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Scheduled for 27 August.</div>
+      </div>
+
+      <!-- TASK 9 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">9</div>
+          <h3>Eston Show 2026 — Event Removal</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Remove the Eston Show 2026 event from the homepage and events page once concluded. Scheduled for 31 August.</div>
+      </div>
+
+      <!-- TASK 10 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">10</div>
+          <h3>New Maintenance Plan Page — Clarity Insights</h3>
+          <span class="status-pill status-progress">Scheduled</span>
+        </div>
+        <div class="task-body">Review the "Love Our New Standard" Maintenance Plan page in Microsoft Clarity — heatmap, user journey, user behaviour, and scroll depth — and provide key learnings to inform future campaigns. Scheduled for 31 August.</div>
+      </div>
+
+      <!-- TASK 11 -->
+      <div class="task">
+        <div class="task-head">
+          <div class="task-num">11</div>
+          <h3>Website refresh</h3>
+          <span class="status-pill status-progress">Planned</span>
+        </div>
+        <div class="task-body">Long-term project planned for January 2027.</div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="issues">
+      <div class="eyebrow">Section 04 · Quality assurance</div>
+      <h2>Issues found &amp; fixes</h2>
+
+      <div class="issue">
+        <div class="issue-head">
+          <div class="issue-icon">!</div>
+          <h3>Subaru Somerset West missing from AutoTrader</h3>
+          <span class="issue-label">Action needed</span>
+        </div>
+        <div class="issue-block">
+          <div class="k">What we found</div>
+          <p>Both the AutoTrader API investigation and the separate pre-owned API integration work confirmed the
+          same root cause: Subaru Somerset West (Dealer ID ATU7SSW00) has not been added as a dealer on AutoTrader's
+          side. This isn't something we can trigger or fix from our end — new dealers and integration updates need
+          to be actioned directly by AutoTrader.</p>
+
+          <div class="k">Recommended action</div>
+          <p>Follow up directly with AutoTrader to request the Somerset West listing be added — looping in the
+          Dealer Principal, who has offered to assist, may help move this along. Once added, we'll retest immediately
+          to confirm stock is syncing and displaying correctly.</p>
+        </div>
+      </div>
+
+      <div class="issue">
+        <div class="issue-head">
+          <div class="issue-icon">!</div>
+          <h3>Maintenance run — outstanding items</h3>
+          <span class="issue-label">Action needed</span>
+        </div>
+        <div class="issue-block">
+          <div class="k">Plugin licenses still missing</div>
+          <p>Carried over — 3 plugins remain outdated pending license keys: Advanced Custom Fields PRO, WP All Export
+          Pro, and WP All Import Pro. Please share current license keys so these can be updated on the next run.</p>
+
+          <div class="k">Contact form testing still pending</div>
+          <p>Carried over — Bev's requested contact form testing has not yet been completed. No update this period;
+          following up to schedule.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="previous">
+      <div class="eyebrow">Section 05 · Archive</div>
+      <h2>Previous audits</h2>
+
+      <div class="archive-list">
+        <a class="archive-item" href="archive-2026-08-10-2026-08-14.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 10 August 2026 – 14 August 2026</div>
+            <div class="a-meta">Reference SUBARUSA7 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-08-03-2026-08-07.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 03 August 2026 – 07 August 2026</div>
+            <div class="a-meta">Reference SUBARUSA6 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-07-27-2026-07-31.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 27 July 2026 – 31 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA5 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-07-20-2026-07-24.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 20 July 2026 – 24 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA4 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-07-13-2026-07-17.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 13 July 2026 – 17 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA3 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-07-06-2026-07-10.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 06 July 2026 – 10 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA2 · Full report, task details &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+        <a class="archive-item" href="archive-2026-06-29-2026-07-03.html" target="_blank">
+          <div>
+            <div class="a-title">SubaruSA — Dev: 29 June 2026 – 03 July 2026</div>
+            <div class="a-meta">Reference SUBARUSA1 · Full report, task details, plugin audit, API check &amp; issues log</div>
+          </div>
+          <div class="a-arrow">View →</div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('.section');
+
+  navItems.forEach(item=>{
+    item.addEventListener('click', ()=>{
+      navItems.forEach(i=>i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  const MARKER = 120;
+
+  function updateActiveSection(){
+    let currentId = sections[0].id;
+    sections.forEach(section=>{
+      const rect = section.getBoundingClientRect();
+      if(rect.top - MARKER <= 0){
+        currentId = section.id;
+      }
+    });
+    navItems.forEach(i=>{
+      i.classList.toggle('active', i.dataset.section === currentId);
+    });
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', ()=>{
+    if(!ticking){
+      window.requestAnimationFrame(()=>{
+        updateActiveSection();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  updateActiveSection();
+</script>
+
+</body>
+</html>
