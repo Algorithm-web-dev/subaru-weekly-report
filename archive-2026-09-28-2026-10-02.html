@@ -81,6 +81,18 @@
   .section{ display:block; scroll-margin-top:40px; padding-bottom:60px; }
   .section + .section{ border-top:1px solid var(--card-border); padding-top:56px; }
 
+  .back-link{
+    position:fixed; top:20px; right:24px; z-index:1000;
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:13px; font-weight:700; color:#fff;
+    background: var(--accent);
+    padding:9px 16px; border-radius:999px;
+    text-decoration:none;
+    box-shadow:0 4px 14px rgba(59,99,240,0.35);
+    transition: background .15s ease, transform .15s ease;
+  }
+  .back-link:hover{ background:#2d4fd1; transform:translateY(-1px); }
+
   .badge{
     display:inline-flex; align-items:center; gap:8px;
     background: var(--accent-soft); color: var(--accent);
@@ -214,6 +226,7 @@
     .meta-row{gap:28px;}
     .api-grid{grid-template-columns:repeat(2,1fr);}
     .form-grid{grid-template-columns:1fr;}
+    .back-link{top:14px; right:14px; padding:7px 13px; font-size:12px;}
   }
 
   @media(max-width:600px){
@@ -256,6 +269,8 @@
 </head>
 <body>
 
+  <a href="index.html" class="back-link">← Back to current report</a>
+
   <div class="sidebar">
     <div class="brand">
       <div class="brand-name">Algorithm</div>
@@ -278,8 +293,8 @@
 
     <div class="sidebar-footer">
       <div class="row"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
-      <div class="row"><div class="label">Report date</div><div class="value">05 October 2026 – 09 October 2026</div></div>
-      <div class="row"><div class="label">Reference</div><div class="value">SUBARUSA15</div></div>
+      <div class="row"><div class="label">Report date</div><div class="value">28 September 2026 – 02 October 2026</div></div>
+      <div class="row"><div class="label">Reference</div><div class="value">SUBARUSA14</div></div>
     </div>
   </div>
 
@@ -303,8 +318,8 @@
 
       <div class="meta-row">
         <div class="meta-item"><div class="label">Reported by</div><div class="value">Algorithm</div></div>
-        <div class="meta-item"><div class="label">Report date</div><div class="value">05 October 2026 – 09 October 2026</div></div>
-        <div class="meta-item"><div class="label">Reference</div><div class="value">SUBARUSA15</div></div>
+        <div class="meta-item"><div class="label">Report date</div><div class="value">28 September 2026 – 02 October 2026</div></div>
+        <div class="meta-item"><div class="label">Reference</div><div class="value">SUBARUSA14</div></div>
         <div class="meta-item"><div class="label">Department</div><div class="value link">Dev</div></div>
       </div>
 
@@ -532,13 +547,6 @@
       <h2>Previous audits</h2>
 
       <div class="archive-list">
-        <a class="archive-item" href="archive-2026-09-28-2026-10-02.html" target="_blank">
-          <div>
-            <div class="a-title">SubaruSA — Dev: 28 September 2026 – 02 October 2026</div>
-            <div class="a-meta">Reference SUBARUSA14 · Full report, task details &amp; issues log</div>
-          </div>
-          <div class="a-arrow">View →</div>
-        </a>
         <a class="archive-item" href="archive-2026-09-21-2026-09-25.html" target="_blank">
           <div>
             <div class="a-title">SubaruSA — Dev: 21 September 2026 – 25 September 2026</div>
