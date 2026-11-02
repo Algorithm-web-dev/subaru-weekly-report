@@ -107,6 +107,9 @@
   .stat-card .stat-num.blue{ color: var(--accent); }
   .stat-card .stat-num.green{ color: var(--green); }
   .stat-card .stat-sub{ font-size:13px; color: var(--text-muted); }
+  .stat-card ul.stat-sub{ margin:0; padding-left:16px; line-height:1.45; }
+  .stat-card ul.stat-sub li{ margin-bottom:6px; }
+  .stat-card ul.stat-sub li:last-child{ margin-bottom:0; }
 
   .timeline{ position:relative; padding-left:44px; }
   .timeline::before{
@@ -315,17 +318,34 @@
         <div class="stat-card">
           <div class="stat-label">Tasks completed</div>
           <div class="stat-num blue">5</div>
-          <div class="stat-sub">Black November Deal Assist updates (live 30 October), October maintenance 2/2, Book a Test Drive vehicle model fix, Garmin MTB Classic (CPT) event removed, Outback imagery &amp; pricing updates</div>
+          <ul class="stat-sub">
+            <li>Black November Deal Assist updates (live 30 October)</li>
+            <li>October maintenance 2/2</li>
+            <li>Book a Test Drive vehicle model fix</li>
+            <li>Garmin MTB Classic (CPT) event removed</li>
+            <li>Outback imagery &amp; pricing updates</li>
+          </ul>
         </div>
         <div class="stat-card">
           <div class="stat-label">Tasks still working on</div>
           <div class="stat-num green">7</div>
-          <div class="stat-sub">Outback 360° viewer images (awaiting images), Register Your Interest form updates &amp; change alerts, Pre-Owned lead form fix (in testing), priority article image fixes, technical SEO fixes, homepage banner video (in build), MY26 Outback product page (built, changes in progress)</div>
+          <ul class="stat-sub">
+            <li>Outback 360° viewer images (awaiting images)</li>
+            <li>Register Your Interest form updates &amp; change alerts</li>
+            <li>Pre-Owned lead form fix (in testing)</li>
+            <li>Priority article image fixes</li>
+            <li>Technical SEO fixes</li>
+            <li>Homepage banner video (in build)</li>
+            <li>MY26 Outback product page (built, changes in progress)</li>
+          </ul>
         </div>
         <div class="stat-card">
           <div class="stat-label">Scheduled ahead</div>
           <div class="stat-num blue">2</div>
-          <div class="stat-sub">Website article consistency fixes (second week of November), website refresh</div>
+          <ul class="stat-sub">
+            <li>Website article consistency fixes (second week of November)</li>
+            <li>Website refresh (January 2027)</li>
+          </ul>
         </div>
       </div>
     </div>
