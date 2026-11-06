@@ -208,6 +208,14 @@
   .archive-item .a-title{ font-size:14px; font-weight:700; margin-bottom:3px; }
   .archive-item .a-meta{ font-size:12px; color:var(--text-faint); }
   .archive-item .a-arrow{ font-size:14px; color:var(--accent); font-weight:700; flex-shrink:0; }
+  .archive-item.is-collapsed{ display:none; }
+  .archive-toggle{
+    margin-top:16px; width:100%; padding:14px 22px; border-radius:12px;
+    border:1px dashed var(--card-border); background:transparent; cursor:pointer;
+    font:inherit; font-size:13px; font-weight:700; color:var(--accent);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .archive-toggle:hover{ border-color:var(--accent); background:var(--accent-soft); }
 
   @media(max-width:900px){
     body{flex-direction:column;}
@@ -720,11 +728,32 @@
           <div class="a-arrow">View →</div>
         </a>
       </div>
+      <button type="button" class="archive-toggle" hidden></button>
     </div>
 
   </div>
 
 <script>
+  (function(){
+    const SHOW = 3;
+    const items = document.querySelectorAll('.archive-list .archive-item');
+    const btn = document.querySelector('.archive-toggle');
+    if(!btn || items.length <= SHOW) return;
+    let expanded = false;
+    function render(){
+      items.forEach((el, i) => el.classList.toggle('is-collapsed', !expanded && i >= SHOW));
+      btn.textContent = expanded ? 'Show fewer ↑' : `View all previous reports (${items.length - SHOW} more) ↓`;
+      btn.setAttribute('aria-expanded', expanded);
+    }
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      expanded = !expanded;
+      render();
+      if(!expanded) document.getElementById('previous').scrollIntoView({block:'start'});
+    });
+    render();
+  })();
+
   const navItems = document.querySelectorAll('.nav-item');
   const sections = document.querySelectorAll('.section');
 
